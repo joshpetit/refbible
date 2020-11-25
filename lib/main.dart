@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:esv_api/esv_api.dart';
 
 void main() => runApp(RefBible());
@@ -87,15 +88,19 @@ class _PassageInputState extends State<PassageInput> {
 
   Widget _buildList() {
     return ListView.builder(
-        padding: EdgeInsets.all(16.0),
         itemCount: verses.length,
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemBuilder: (context, i) {
           return ListTile(
-            title: Text(verses[i].key),
-            subtitle: Text(verses[i].value),
-          );
+              title: Text(verses[i].key),
+              subtitle: Text(verses[i].value),
+              trailing: Icon(
+                Icons.copy,
+              ),
+              onTap: () {
+                FlutterClipboard.copy(verses[i].value);
+              });
         });
   }
 }
