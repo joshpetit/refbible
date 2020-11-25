@@ -55,37 +55,38 @@ class _PassageInputState extends State<PassageInput> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Welcome to Flutter!'),
+        title: Text('RefBible'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Text('Search a verse!'),
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    hintText: 'John 3:16',
-                  ),
-                  onSubmitted: (val) {
-                    _getVerse(val);
-                    print(verses);
-                  },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Text('Query a verse:'),
+              ),
+              TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  hintText: 'John 3:16',
                 ),
-                RaisedButton(
-                    child:
-                        Text('Search', style: TextStyle(color: Colors.black)),
-                    color: Colors.grey,
-                    onPressed: () {
-                      _getVerse(controller.text);
-                    }),
-                _buildList(),
-              ], // Children end
-            ), // Column end
-          ),
-        ), // Center end
+                onSubmitted: (val) {
+                  _getVerse(val);
+                  print(verses);
+                },
+              ),
+              RaisedButton(
+                  child: Text('Search', style: TextStyle(color: Colors.black)),
+                  color: Colors.grey,
+                  onPressed: () {
+                    _getVerse(controller.text);
+                  }),
+              _buildList(),
+            ], // Children end
+          ), // Column end
+        ),
       ), // Padding end
     );
   } // end
