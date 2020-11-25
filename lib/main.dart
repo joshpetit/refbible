@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'package:esv_api/esv_api.dart';
 
 void main() => runApp(RefBible());
 
@@ -20,7 +20,7 @@ class PassageInput extends StatefulWidget {
 
 class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
-  final verses = <String>[];
+  final verses = <MapEntry<String, String>>[];
 
   @override
   void dispose() {
@@ -28,7 +28,21 @@ class _PassageInputState extends State<PassageInput> {
     super.dispose();
   }
 
-  void addVerse(String verse) {
+  void _getVerse(String verse) {
+    _fetchEsvAPI(verse)
+        .then((x) => {_addVerse(MapEntry(verse, x))})
+        .catchError((e) => 'welp ¯\_(ツ)_/¯ ');
+  }
+
+  Future<String> _fetchEsvAPI(String verse) async {
+    var esv = ESVAPI('');
+
+    var res = await esv.getPassageText(verse,
+        include_short_copyright: false, include_copyright: false);
+    return res.passages.first;
+  }
+
+  void _addVerse(MapEntry<String, String> verse) {
     setState(() {
       verses.insert(0, verse);
     });
@@ -51,7 +65,7 @@ class _PassageInputState extends State<PassageInput> {
                   controller: controller,
                   decoration: InputDecoration(hintText: 'John 3:16'),
                   onSubmitted: (val) {
-                    addVerse(val);
+                    _getVerse(val);
                     print(verses);
                   },
                 ),
@@ -60,7 +74,7 @@ class _PassageInputState extends State<PassageInput> {
                         Text('Search', style: TextStyle(color: Colors.black)),
                     color: Colors.white,
                     onPressed: () {
-                      addVerse(controller.text);
+                      _getVerse(controller.text);
                     }),
                 _buildList(),
               ], // Children end
@@ -79,8 +93,8 @@ class _PassageInputState extends State<PassageInput> {
         shrinkWrap: true,
         itemBuilder: (context, i) {
           return ListTile(
-            title: Text(verses[i]),
-            subtitle: Text('Verse Text'),
+            title: Text(verses[i].key),
+            subtitle: Text(verses[i].value),
           );
         });
   }
