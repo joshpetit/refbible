@@ -54,6 +54,12 @@ class _PassageInputState extends State<PassageInput> {
                   print(verses);
                 },
               ),
+              RaisedButton(
+                  child: Text('Search', style: TextStyle(color: Colors.black)),
+                  color: Colors.white,
+                  onPressed: () {
+                    addVerse(controller.text);
+                  }),
               _buildList(),
             ], // Children end
           ), // Column end
