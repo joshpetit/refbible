@@ -20,11 +20,18 @@ class PassageInput extends StatefulWidget {
 
 class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
+  final verses = <String>[];
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  void addVerse(String verse) {
+    setState(() {
+      verses.insert(0, verse);
+    });
   }
 
   @override
@@ -43,14 +50,29 @@ class _PassageInputState extends State<PassageInput> {
                 controller: controller,
                 decoration: InputDecoration(hintText: 'John 3:16'),
                 onSubmitted: (val) {
-                  print(val);
+                  addVerse(val);
+                  print(verses);
                 },
               ),
-              Text('Ya'),
-            ],
-          ),
-        ),
-      ),
+              _buildList(),
+            ], // Children end
+          ), // Column end
+        ), // Center end
+      ), // Padding end
     );
+  } // end
+
+  Widget _buildList() {
+    return ListView.builder(
+        padding: EdgeInsets.all(16.0),
+        itemCount: verses.length,
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemBuilder: (context, i) {
+          return ListTile(
+            title: Text(verses[i]),
+            subtitle: Text('Verse Text'),
+          );
+        });
   }
 }
