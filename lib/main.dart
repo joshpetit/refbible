@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:esv_api/esv_api.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() => runApp(RefBible());
 
@@ -100,6 +101,7 @@ class _PassageInputState extends State<PassageInput> {
               ),
               onTap: () {
                 FlutterClipboard.copy(verses[i].value);
+                Fluttertoast.showToast(msg: 'Copied to Clipboard');
               });
         });
   }
