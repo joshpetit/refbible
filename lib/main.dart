@@ -11,6 +11,7 @@ class RefBible extends StatelessWidget {
     return MaterialApp(
       title: 'welcome to Flutter',
       home: PassageInput(),
+      darkTheme: ThemeData.dark(),
     );
   }
 }
@@ -65,7 +66,9 @@ class _PassageInputState extends State<PassageInput> {
                 Text('Search a verse!'),
                 TextField(
                   controller: controller,
-                  decoration: InputDecoration(hintText: 'John 3:16'),
+                  decoration: InputDecoration(
+                    hintText: 'John 3:16',
+                  ),
                   onSubmitted: (val) {
                     _getVerse(val);
                     print(verses);
@@ -74,7 +77,7 @@ class _PassageInputState extends State<PassageInput> {
                 RaisedButton(
                     child:
                         Text('Search', style: TextStyle(color: Colors.black)),
-                    color: Colors.white,
+                    color: Colors.grey,
                     onPressed: () {
                       _getVerse(controller.text);
                     }),
@@ -90,8 +93,8 @@ class _PassageInputState extends State<PassageInput> {
   Widget _buildList() {
     return ListView.builder(
         itemCount: verses.length,
-        scrollDirection: Axis.vertical,
         shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, i) {
           return ListTile(
               title: Text(verses[i].key),
