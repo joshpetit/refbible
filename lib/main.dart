@@ -43,26 +43,29 @@ class _PassageInputState extends State<PassageInput> {
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Center(
-          child: Column(
-            children: [
-              Text('Search a verse!'),
-              TextField(
-                controller: controller,
-                decoration: InputDecoration(hintText: 'John 3:16'),
-                onSubmitted: (val) {
-                  addVerse(val);
-                  print(verses);
-                },
-              ),
-              RaisedButton(
-                  child: Text('Search', style: TextStyle(color: Colors.black)),
-                  color: Colors.white,
-                  onPressed: () {
-                    addVerse(controller.text);
-                  }),
-              _buildList(),
-            ], // Children end
-          ), // Column end
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text('Search a verse!'),
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(hintText: 'John 3:16'),
+                  onSubmitted: (val) {
+                    addVerse(val);
+                    print(verses);
+                  },
+                ),
+                RaisedButton(
+                    child:
+                        Text('Search', style: TextStyle(color: Colors.black)),
+                    color: Colors.white,
+                    onPressed: () {
+                      addVerse(controller.text);
+                    }),
+                _buildList(),
+              ], // Children end
+            ), // Column end
+          ),
         ), // Center end
       ), // Padding end
     );
