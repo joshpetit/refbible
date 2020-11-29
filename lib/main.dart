@@ -71,25 +71,21 @@ class _PassageInputState extends State<PassageInput> {
                   height: MediaQuery.of(context).size.height * 0.70,
                   child: _buildList(),
                 ),
-                Column(
-                  children: <Widget>[
-                    RaisedButton(
-                        child: Text('Search',
-                            style: TextStyle(color: Colors.black)),
-                        color: Colors.grey,
-                        onPressed: () {
-                          _getVerse(controller.text);
-                        }),
-                    TextField(
-                      controller: controller,
-                      decoration: InputDecoration(
-                        hintText: 'John 3:16',
-                      ),
-                      onSubmitted: (val) {
-                        _getVerse(val);
-                      },
-                    ),
-                  ],
+                RaisedButton(
+                    child:
+                        Text('Search', style: TextStyle(color: Colors.black)),
+                    color: Colors.grey,
+                    onPressed: () {
+                      _getVerse(controller.text);
+                    }),
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: 'John 3:16',
+                  ),
+                  onSubmitted: (val) {
+                    _getVerse(val);
+                  },
                 ),
               ], // Children end
             ), // Column end
