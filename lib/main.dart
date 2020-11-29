@@ -57,43 +57,50 @@ class _PassageInputState extends State<PassageInput> {
       appBar: AppBar(
         title: Text('RefBible'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Text('Query a verse:'),
-              ),
-              TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: 'John 3:16',
+      body: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildList(),
+                RaisedButton(
+                    child:
+                        Text('Search', style: TextStyle(color: Colors.black)),
+                    color: Colors.grey,
+                    onPressed: () {
+                      _getVerse(controller.text);
+                    }),
+                TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: 'John 3:16',
+                  ),
+                  onSubmitted: (val) {
+                    _getVerse(val);
+                    print(verses);
+                  },
                 ),
-                onSubmitted: (val) {
-                  _getVerse(val);
-                  print(verses);
-                },
-              ),
-              RaisedButton(
-                  child: Text('Search', style: TextStyle(color: Colors.black)),
-                  color: Colors.grey,
-                  onPressed: () {
-                    _getVerse(controller.text);
-                  }),
-              _buildList(),
-            ], // Children end
-          ), // Column end
-        ),
-      ), // Padding end
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text('Query a verse'),
+                ),
+              ], // Children end
+            ), // Column end
+          ),
+        ), // Padding end
+      ),
     );
   } // end
 
   Widget _buildList() {
     return ListView.builder(
         itemCount: verses.length,
+        reverse: true,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (context, i) {
