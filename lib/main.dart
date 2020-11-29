@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:esv_api/esv_api.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'Secrets.dart';
 
 void main() => runApp(RefBible());
 
@@ -38,7 +39,7 @@ class _PassageInputState extends State<PassageInput> {
   }
 
   Future<String> _fetchEsvAPI(String verse) async {
-    var esv = ESVAPI('');
+    var esv = ESVAPI(Secrets.ESV);
 
     var res = await esv.getPassageText(verse,
         include_short_copyright: false, include_copyright: false);
