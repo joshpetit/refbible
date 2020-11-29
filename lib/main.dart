@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:esv_api/esv_api.dart';
+import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
 
-void main() => runApp(RefBible());
+void main() => runApp(
+      RefBible(),
+    );
 
 class RefBible extends StatelessWidget {
   @override
@@ -34,22 +36,22 @@ class _PassageInputState extends State<PassageInput> {
 
   void _getVerse(String verse) {
     _fetchEsvAPI(verse)
-        .then((x) => {_addVerse(MapEntry(verse, x))})
+        .then((x) => {_addVerse(MapEntry(x.reference, x.passage))})
         .catchError((e) => 'welp ¯\_(ツ)_/¯ ');
   }
 
-  Future<String> _fetchEsvAPI(String verse) async {
-    var esv = ESVAPI(Secrets.ESV);
-
-    var res = await esv.getPassageText(verse,
-        include_short_copyright: false, include_copyright: false);
-    return res.passages.first;
+  Future<dynamic> _fetchEsvAPI(String verse) async {
+    Bible.addKeys({"esvapi": Secrets.ESV});
+    var res = await Bible.queryPassage(verse);
+    return res;
   }
 
   void _addVerse(MapEntry<String, String> verse) {
     setState(() {
       verses.insert(0, verse);
     });
+    FlutterClipboard.copy(verse.value);
+    Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
 
   @override
