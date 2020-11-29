@@ -67,27 +67,29 @@ class _PassageInputState extends State<PassageInput> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildList(),
-                RaisedButton(
-                    child:
-                        Text('Search', style: TextStyle(color: Colors.black)),
-                    color: Colors.grey,
-                    onPressed: () {
-                      _getVerse(controller.text);
-                    }),
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    hintText: 'John 3:16',
-                  ),
-                  onSubmitted: (val) {
-                    _getVerse(val);
-                    print(verses);
-                  },
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.70,
+                  child: _buildList(),
                 ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Text('Query a verse'),
+                Column(
+                  children: <Widget>[
+                    RaisedButton(
+                        child: Text('Search',
+                            style: TextStyle(color: Colors.black)),
+                        color: Colors.grey,
+                        onPressed: () {
+                          _getVerse(controller.text);
+                        }),
+                    TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'John 3:16',
+                      ),
+                      onSubmitted: (val) {
+                        _getVerse(val);
+                      },
+                    ),
+                  ],
                 ),
               ], // Children end
             ), // Column end
@@ -102,7 +104,7 @@ class _PassageInputState extends State<PassageInput> {
         itemCount: verses.length,
         reverse: true,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, i) {
           return ListTile(
               title: Text(verses[i].key),
