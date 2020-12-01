@@ -27,6 +27,10 @@ class PassageInput extends StatefulWidget {
 class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
   final verses = <MapEntry<String, String>>[];
+  final favorites = <MapEntry<String, String>>[
+    MapEntry("Favorite", "Text Stuff"),
+    MapEntry("Favorite", "Text Stuff"),
+  ];
 
   @override
   void dispose() {
@@ -66,12 +70,15 @@ class _PassageInputState extends State<PassageInput> {
           padding: EdgeInsets.all(16),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.70,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: _buildFavorites(),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.60,
                   child: _buildList(),
                 ),
                 RaisedButton(
@@ -115,6 +122,22 @@ class _PassageInputState extends State<PassageInput> {
                 FlutterClipboard.copy(verses[i].value);
                 Fluttertoast.showToast(msg: 'Copied to Clipboard');
               });
+        });
+  }
+
+  Widget _buildFavorites() {
+    return ListView.builder(
+        itemCount: favorites.length,
+        shrinkWrap: true,
+        itemBuilder: (context, i) {
+          return Container(
+              child: ListTile(
+                  title: Text(favorites[i].key),
+                  subtitle: Text(favorites[i].value),
+                  onTap: () {
+                    FlutterClipboard.copy(favorites[i].value);
+                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                  }));
         });
   }
 }
