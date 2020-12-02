@@ -4,6 +4,11 @@ import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
 
+extension StringExtension on String {
+  String truncateTo(int maxLenght) =>
+      (this.length <= maxLenght) ? this : '${this.substring(0, maxLenght)}...';
+}
+
 void main() => runApp(
       RefBible(),
     );
@@ -144,7 +149,7 @@ class _PassageInputState extends State<PassageInput> {
             width: 100,
             child: ListTile(
                 title: Text(favorites[i].key),
-                subtitle: Text(favorites[i].value),
+                subtitle: Text(favorites[i].value.truncateTo(8)),
                 onTap: () {
                   FlutterClipboard.copy(favorites[i].value);
                   Fluttertoast.showToast(msg: 'Copied to Clipboard');
