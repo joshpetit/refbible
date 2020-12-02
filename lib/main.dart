@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -85,21 +86,26 @@ class _PassageInputState extends State<PassageInput> {
                   height: MediaQuery.of(context).size.height * 0.60,
                   child: _buildList(),
                 ),
-                RaisedButton(
-                    child:
-                        Text('Search', style: TextStyle(color: Colors.black)),
-                    color: Colors.grey,
-                    onPressed: () {
-                      _getVerse(controller.text);
-                    }),
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    hintText: 'John 3:16',
-                  ),
-                  onSubmitted: (val) {
-                    _getVerse(val);
-                  },
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    RaisedButton(
+                        child: Text('Search',
+                            style: TextStyle(color: Colors.black)),
+                        color: Colors.grey,
+                        onPressed: () {
+                          _getVerse(controller.text);
+                        }),
+                    TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: 'John 3:16',
+                      ),
+                      onSubmitted: (val) {
+                        _getVerse(val);
+                      },
+                    ),
+                  ],
                 ),
               ], // Children end
             ), // Column end
