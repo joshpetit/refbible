@@ -30,6 +30,10 @@ class _PassageInputState extends State<PassageInput> {
   final favorites = <MapEntry<String, String>>[
     MapEntry("Favorite", "Text Stuff"),
     MapEntry("Favorite", "Text Stuff"),
+    MapEntry("Favorite", "Text Stuff"),
+    MapEntry("Favorite", "Text Stuff"),
+    MapEntry("Favorite", "Text Stuff"),
+    MapEntry("Favorite", "Text Stuff"),
   ];
 
   @override
@@ -129,15 +133,18 @@ class _PassageInputState extends State<PassageInput> {
     return ListView.builder(
         itemCount: favorites.length,
         shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) {
-          return Container(
-              child: ListTile(
-                  title: Text(favorites[i].key),
-                  subtitle: Text(favorites[i].value),
-                  onTap: () {
-                    FlutterClipboard.copy(favorites[i].value);
-                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
-                  }));
+          return SizedBox(
+            width: 100,
+            child: ListTile(
+                title: Text(favorites[i].key),
+                subtitle: Text(favorites[i].value),
+                onTap: () {
+                  FlutterClipboard.copy(favorites[i].value);
+                  Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                }),
+          );
         });
   }
 }
