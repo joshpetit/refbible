@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:keyboard_attachable/keyboard_attachable.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,12 +28,12 @@ class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
   final verses = <MapEntry<String, String>>[];
   final favorites = <MapEntry<String, String>>[
+    MapEntry("Favorite", "Text Stuff Longer longer Longer"),
     MapEntry("Favorite", "Text Stuff"),
     MapEntry("Favorite", "Text Stuff"),
     MapEntry("Favorite", "Text Stuff"),
     MapEntry("Favorite", "Text Stuff"),
-    MapEntry("Favorite", "Text Stuff"),
-    MapEntry("Favorite", "Text Stuff"),
+    MapEntry("Favorite", "Text Stuff Longer Longer Longer"),
   ];
 
   @override
