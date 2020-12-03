@@ -132,22 +132,23 @@ class _PassageInputState extends State<PassageInput> {
         shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, i) {
-          return ListTile(
-              title: Text(verses[i].key),
-              subtitle: Text(verses[i].value),
-              trailing: Column(
-                children: [
-                  IconButton(
-                      icon: Icon(Icons.favorite),
-                      onPressed: () {
-                        _addToFavorites(verses[i].key, verses[i].value);
-                      }),
-                ],
-              ),
-              onTap: () {
-                FlutterClipboard.copy(verses[i].value);
-                Fluttertoast.showToast(msg: 'Copied to Clipboard');
-              });
+          return GestureDetector(
+              child: ListTile(
+                  title: Text(verses[i].key),
+                  subtitle: Text(verses[i].value),
+                  trailing: Column(
+                    children: [
+                      IconButton(
+                          icon: Icon(Icons.favorite),
+                          onPressed: () {
+                            _addToFavorites(verses[i].key, verses[i].value);
+                          }),
+                    ],
+                  ),
+                  onTap: () {
+                    FlutterClipboard.copy(verses[i].value);
+                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                  }));
         });
   }
 
@@ -158,10 +159,10 @@ class _PassageInputState extends State<PassageInput> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) {
           return SizedBox(
-            width: 100,
+            width: 150,
             child: ListTile(
                 title: Text(favorites[i].key),
-                subtitle: Text(favorites[i].value.truncateTo(8)),
+                subtitle: Text(favorites[i].value.truncateTo(16)),
                 onTap: () {
                   FlutterClipboard.copy(favorites[i].value);
                   Fluttertoast.showToast(msg: 'Copied to Clipboard');
