@@ -67,6 +67,12 @@ class _PassageInputState extends State<PassageInput> {
     Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
 
+  void _addToFavorites(String ref, String text) {
+    setState(() {
+      favorites.insert(0, MapEntry(ref, text));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,7 +140,7 @@ class _PassageInputState extends State<PassageInput> {
                   IconButton(
                       icon: Icon(Icons.favorite),
                       onPressed: () {
-                        //
+                        _addToFavorites(verses[i].key, verses[i].value);
                       }),
                 ],
               ),
