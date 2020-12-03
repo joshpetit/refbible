@@ -129,8 +129,14 @@ class _PassageInputState extends State<PassageInput> {
           return ListTile(
               title: Text(verses[i].key),
               subtitle: Text(verses[i].value),
-              trailing: Icon(
-                Icons.copy,
+              trailing: Column(
+                children: [
+                  IconButton(
+                      icon: Icon(Icons.favorite),
+                      onPressed: () {
+                        //
+                      }),
+                ],
               ),
               onTap: () {
                 FlutterClipboard.copy(verses[i].value);
