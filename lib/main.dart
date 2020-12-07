@@ -214,10 +214,10 @@ class _PassageInputState extends State<PassageInput> {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) {
           return SizedBox(
-            width: 150,
+            width: 200,
             child: ListTile(
                 title: Text(favorites[i].reference),
-                subtitle: Text(favorites[i].text.truncateTo(15), maxLines: 1),
+                subtitle: Text(favorites[i].text.truncateTo(23), maxLines: 1),
                 onTap: () {
                   copyVerse(favorites[i]);
                 }),
