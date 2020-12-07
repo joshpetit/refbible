@@ -37,10 +37,12 @@ class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
   final verses = <RefVerse>[];
   final favorites = <RefVerse>[];
+  final favoriteRefs = <String>{};
   Future<Database> database;
 
   @override
   void initState() {
+    super.initState();
     initDB();
   }
 
@@ -81,7 +83,10 @@ class _PassageInputState extends State<PassageInput> {
 
   void _getVerse(String verse) {
     _fetchEsvAPI(verse)
-        .then((x) => {_addVerse(RefVerse(x.reference, x.passage, false))})
+        .then((x) => {
+              _addVerse(RefVerse(
+                  x.reference, x.passage, favoriteRefs.contains(x.reference)))
+            })
         .catchError((e) => 'welp ¯\_(ツ)_/¯ ');
   }
 
@@ -105,6 +110,9 @@ class _PassageInputState extends State<PassageInput> {
     });
     insertFavorite(verse);
     verse.favorited = true;
+    this.setState(() {
+      favoriteRefs.add(verse.reference);
+    });
   }
 
   void copyVerse(RefVerse v) {
@@ -182,7 +190,9 @@ class _PassageInputState extends State<PassageInput> {
                               ? Icons.favorite
                               : Icons.favorite_border),
                           onPressed: () {
-                            _addToFavorites(verses[i]);
+                            if (!verses[i].favorited) {
+                              _addToFavorites(verses[i]);
+                            }
                           }),
                     ],
                   ),
