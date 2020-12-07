@@ -4,4 +4,7 @@ class RefVerse {
   bool favorited;
 
   RefVerse(this.reference, this.text, this.favorited);
+
+  Map<String, dynamic> toMap() =>
+      {'reference': reference, 'text': text, 'favorited': favorited ? 1 : 0};
 }
