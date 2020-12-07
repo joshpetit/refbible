@@ -34,10 +34,6 @@ class _PassageInputState extends State<PassageInput> {
   final verses = <MapEntry<String, String>>[];
   final favorites = <MapEntry<String, String>>[
     MapEntry("Favorite", "Text Stuff Longer longer Longer"),
-    MapEntry("Favorite", "Text Stuff"),
-    MapEntry("Favorite", "Text Stuff"),
-    MapEntry("Favorite", "Text Stuff"),
-    MapEntry("Favorite", "Text Stuff"),
     MapEntry("Favorite", "Text Stuff Longer Longer Longer"),
   ];
 
@@ -162,7 +158,7 @@ class _PassageInputState extends State<PassageInput> {
             width: 150,
             child: ListTile(
                 title: Text(favorites[i].key),
-                subtitle: Text(favorites[i].value.truncateTo(16)),
+                subtitle: Text(favorites[i].value.truncateTo(15), maxLines: 1),
                 onTap: () {
                   FlutterClipboard.copy(favorites[i].value);
                   Fluttertoast.showToast(msg: 'Copied to Clipboard');
