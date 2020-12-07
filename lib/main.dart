@@ -3,6 +3,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
+import 'package:sqflite/sqflite.dart';
 
 extension StringExtension on String {
   String truncateTo(int maxLenght) =>
