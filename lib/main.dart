@@ -50,12 +50,17 @@ class _PassageInputState extends State<PassageInput> {
       onCreate: (db, version) {
         return db.execute(
             """CREATE TABLE IF NOT EXISTS favorite_verses(id INTEGER PRIMARY KEY AUTOINCREMENT,
-            reference TEXT,
+            reference TEXT UNIQUE,
             text TEXT,
             favorited INTEGER)""");
       },
       version: 1,
     );
+    final Database db = await database;
+    final List<Map<String, dynamic>> verses = await db.query('favorite_verses');
+    favorites.addAll(List.generate(verses.length, (i) {
+      return RefVerse(verses[i]['reference'], verses[i]['text'], true);
+    }));
   }
 
   Future<void> insertFavorite(RefVerse verse) async {
