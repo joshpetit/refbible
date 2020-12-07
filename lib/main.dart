@@ -104,6 +104,7 @@ class _PassageInputState extends State<PassageInput> {
       favorites.insert(0, verse);
     });
     insertFavorite(verse);
+    verse.favorited = true;
   }
 
   void copyVerse(RefVerse v) {
@@ -177,7 +178,9 @@ class _PassageInputState extends State<PassageInput> {
                   trailing: Column(
                     children: [
                       IconButton(
-                          icon: Icon(Icons.favorite),
+                          icon: Icon(verses[i].favorited
+                              ? Icons.favorite
+                              : Icons.favorite_border),
                           onPressed: () {
                             _addToFavorites(verses[i]);
                           }),
