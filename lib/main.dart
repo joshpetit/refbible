@@ -3,6 +3,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
+import 'RefVerse.dart';
 import 'package:sqflite/sqflite.dart';
 
 extension StringExtension on String {
@@ -32,11 +33,8 @@ class PassageInput extends StatefulWidget {
 
 class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
-  final verses = <MapEntry<String, String>>[];
-  final favorites = <MapEntry<String, String>>[
-    MapEntry("Favorite", "Text Stuff Longer longer Longer"),
-    MapEntry("Favorite", "Text Stuff Longer Longer Longer"),
-  ];
+  final verses = <RefVerse>[];
+  final favorites = <RefVerse>[];
 
   @override
   void dispose() {
@@ -46,7 +44,7 @@ class _PassageInputState extends State<PassageInput> {
 
   void _getVerse(String verse) {
     _fetchEsvAPI(verse)
-        .then((x) => {_addVerse(MapEntry(x.reference, x.passage))})
+        .then((x) => {_addVerse(RefVerse(x.reference, x.passage, false))})
         .catchError((e) => 'welp ¯\_(ツ)_/¯ ');
   }
 
@@ -56,18 +54,23 @@ class _PassageInputState extends State<PassageInput> {
     return res;
   }
 
-  void _addVerse(MapEntry<String, String> verse) {
+  void _addVerse(RefVerse verse) {
     setState(() {
       verses.insert(0, verse);
     });
-    FlutterClipboard.copy(verse.value);
+    FlutterClipboard.copy(" ${verse.reference}\n${verse.text}");
     Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
 
   void _addToFavorites(String ref, String text) {
     setState(() {
-      favorites.insert(0, MapEntry(ref, text));
+      favorites.insert(0, RefVerse(ref, text, true));
     });
+  }
+
+  void copyVerse(RefVerse v) {
+    FlutterClipboard.copy("${v.reference}\n${v.text}");
+    Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
 
   @override
@@ -131,20 +134,20 @@ class _PassageInputState extends State<PassageInput> {
         itemBuilder: (context, i) {
           return GestureDetector(
               child: ListTile(
-                  title: Text(verses[i].key),
-                  subtitle: Text(verses[i].value),
+                  title: Text(verses[i].text),
+                  subtitle: Text(verses[i].reference),
                   trailing: Column(
                     children: [
                       IconButton(
                           icon: Icon(Icons.favorite),
                           onPressed: () {
-                            _addToFavorites(verses[i].key, verses[i].value);
+                            _addToFavorites(
+                                verses[i].reference, verses[i].text);
                           }),
                     ],
                   ),
                   onTap: () {
-                    FlutterClipboard.copy(verses[i].value);
-                    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                    copyVerse(verses[i]);
                   }));
         });
   }
@@ -158,11 +161,10 @@ class _PassageInputState extends State<PassageInput> {
           return SizedBox(
             width: 150,
             child: ListTile(
-                title: Text(favorites[i].key),
-                subtitle: Text(favorites[i].value.truncateTo(15), maxLines: 1),
+                title: Text(favorites[i].reference),
+                subtitle: Text(favorites[i].text.truncateTo(15), maxLines: 1),
                 onTap: () {
-                  FlutterClipboard.copy(favorites[i].value);
-                  Fluttertoast.showToast(msg: 'Copied to Clipboard');
+                  copyVerse(favorites[i]);
                 }),
           );
         });
