@@ -4,7 +4,9 @@ import 'package:bible/bible.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
 import 'RefVerse.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:async';
 
 extension StringExtension on String {
   String truncateTo(int maxLenght) =>
@@ -35,6 +37,36 @@ class _PassageInputState extends State<PassageInput> {
   final controller = TextEditingController();
   final verses = <RefVerse>[];
   final favorites = <RefVerse>[];
+  Future<Database> database;
+
+  @override
+  void initState() {
+    initDB();
+  }
+
+  Future<void> initDB() async {
+    database = openDatabase(
+      join(await getDatabasesPath(), 'refbible.db'),
+      onCreate: (db, version) {
+        return db.execute(
+            """CREATE TABLE IF NOT EXISTS favorite_verses(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            reference TEXT,
+            text TEXT,
+            favorited INTEGER)""");
+      },
+      version: 1,
+    );
+  }
+
+  Future<void> insertFavorite(RefVerse verse) async {
+    final Database db = await database;
+
+    await db.insert(
+      'favorite_verses',
+      verse.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
   @override
   void dispose() {
@@ -62,10 +94,11 @@ class _PassageInputState extends State<PassageInput> {
     Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
 
-  void _addToFavorites(String ref, String text) {
+  void _addToFavorites(RefVerse verse) {
     setState(() {
-      favorites.insert(0, RefVerse(ref, text, true));
+      favorites.insert(0, verse);
     });
+    insertFavorite(verse);
   }
 
   void copyVerse(RefVerse v) {
@@ -141,8 +174,7 @@ class _PassageInputState extends State<PassageInput> {
                       IconButton(
                           icon: Icon(Icons.favorite),
                           onPressed: () {
-                            _addToFavorites(
-                                verses[i].reference, verses[i].text);
+                            _addToFavorites(verses[i]);
                           }),
                     ],
                   ),
