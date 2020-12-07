@@ -60,9 +60,14 @@ class _PassageInputState extends State<PassageInput> {
     );
     final Database db = await database;
     final List<Map<String, dynamic>> verses = await db.query('favorite_verses');
+    List<String> refs = [];
     favorites.addAll(List.generate(verses.length, (i) {
+      refs.add(verses[i]['reference']);
       return RefVerse(verses[i]['reference'], verses[i]['text'], true);
     }));
+    this.setState(() {
+      favoriteRefs.addAll(refs);
+    });
   }
 
   Future<void> insertFavorite(RefVerse verse) async {
