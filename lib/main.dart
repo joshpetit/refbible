@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:bible/bible.dart';
+import 'package:menu/menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
 import 'RefVerse.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'dart:async';
 
@@ -217,21 +217,19 @@ class _PassageInputState extends State<PassageInput> {
         itemBuilder: (context, i) {
           return SizedBox(
             width: 200,
-            child: FocusedMenuHolder(
-                child: ListTile(
-                    title: Text(favorites[i].reference),
-                    subtitle:
-                        Text(favorites[i].text.truncateTo(23), maxLines: 1),
-                    onTap: () {
-                      copyVerse(favorites[i]);
-                    }),
-                menuItems: [
-                  FocusedMenuItem(
-                    title: Text("Remove"),
-                    backgroundColor: Colors.black,
-                    trailingIcon: Icon(Icons.delete_outlined),
-                  ),
-                ]),
+            child: Menu(
+              child: ListTile(
+                  title: Text(favorites[i].reference),
+                  subtitle: Text(favorites[i].text.truncateTo(23), maxLines: 1),
+                  onTap: () {
+                    copyVerse(favorites[i]);
+                  }),
+              items: [
+                MenuItem("Remove", () {
+                  print('remove called');
+                }),
+              ],
+            ),
           );
         });
   }
