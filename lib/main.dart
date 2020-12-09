@@ -6,6 +6,8 @@ import 'Secrets.dart';
 import 'RefVerse.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'dart:async';
 
 extension StringExtension on String {
@@ -215,12 +217,21 @@ class _PassageInputState extends State<PassageInput> {
         itemBuilder: (context, i) {
           return SizedBox(
             width: 200,
-            child: ListTile(
-                title: Text(favorites[i].reference),
-                subtitle: Text(favorites[i].text.truncateTo(23), maxLines: 1),
-                onTap: () {
-                  copyVerse(favorites[i]);
-                }),
+            child: FocusedMenuHolder(
+                child: ListTile(
+                    title: Text(favorites[i].reference),
+                    subtitle:
+                        Text(favorites[i].text.truncateTo(23), maxLines: 1),
+                    onTap: () {
+                      copyVerse(favorites[i]);
+                    }),
+                menuItems: [
+                  FocusedMenuItem(
+                    title: Text("Remove"),
+                    backgroundColor: Colors.black,
+                    trailingIcon: Icon(Icons.delete_outlined),
+                  ),
+                ]),
           );
         });
   }
