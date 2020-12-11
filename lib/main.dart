@@ -117,9 +117,11 @@ class _MainSectionState extends State<MainSection> {
   }
 
   void _addVerse(RefVerse verse) {
-    setState(() {
-      verses.insert(0, verse);
-    });
+    if (verses.length == 0 || verses[0].reference != verse.reference) {
+      setState(() {
+        verses.insert(0, verse);
+      });
+    }
     FlutterClipboard.copy(" ${verse.reference}\n${verse.text}");
     Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
@@ -192,7 +194,7 @@ class _MainSectionState extends State<MainSection> {
                               controller.clear();
                             }),
                         suggestionsCallback: (pattern) async {
-                          if (pattern.length > 3) {
+                          if (pattern.length > 2) {
                             return await identifyReference(pattern);
                           }
                         },
@@ -266,6 +268,7 @@ class _MainSectionState extends State<MainSection> {
                   subtitle: Text(favorites[i].text.truncateTo(23), maxLines: 1),
                   onTap: () {
                     copyVerse(favorites[i]);
+                    _addVerse(favorites[i]);
                   }),
               items: [
                 MenuItem("Remove", () {
