@@ -198,8 +198,8 @@ class _MainSectionState extends State<MainSection> {
                         },
                         itemBuilder: (context, suggestion) {
                           return ListTile(
-                            title: Text(suggestion.reference.reference),
-                            subtitle: Text(suggestion.preview),
+                            subtitle: Text(suggestion.reference.reference),
+                            title: Text(suggestion.preview),
                           );
                         },
                         onSuggestionSelected: (suggestion) {
