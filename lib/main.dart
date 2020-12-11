@@ -82,6 +82,14 @@ class _PassageInputState extends State<PassageInput> {
     );
   }
 
+  Future<void> removeFavorite(RefVerse verse) async {
+    final Database db = await database;
+    await db.delete(
+      'favorite_verses',
+      where: "reference = '${verse.reference}'",
+    );
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -120,6 +128,15 @@ class _PassageInputState extends State<PassageInput> {
     this.setState(() {
       favoriteRefs.add(verse.reference);
     });
+  }
+
+  void _removeFavorite(RefVerse verse) {
+    verse.favorited = false;
+    this.setState(() {
+      favorites.removeWhere((ref) => ref.reference == verse.reference);
+      favoriteRefs.remove(verse.reference);
+    });
+    removeFavorite(verse);
   }
 
   void copyVerse(RefVerse v) {
@@ -199,6 +216,8 @@ class _PassageInputState extends State<PassageInput> {
                           onPressed: () {
                             if (!verses[i].favorited) {
                               _addToFavorites(verses[i]);
+                            } else {
+                              _removeFavorite(verses[i]);
                             }
                           }),
                     ],
@@ -226,7 +245,7 @@ class _PassageInputState extends State<PassageInput> {
                   }),
               items: [
                 MenuItem("Remove", () {
-                  print('remove called');
+                  _removeFavorite(favorites[i]);
                 }),
               ],
             ),
