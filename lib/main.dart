@@ -205,9 +205,10 @@ class _MainSectionState extends State<MainSection> {
                           _getVerse(suggestion.reference.reference);
                           controller.clear();
                         },
+                        animationDuration: Duration(seconds: 0),
                         noItemsFoundBuilder: (context) {
                           return Text('Searching...');
-                        })
+                        }),
                   ],
                 ),
               ], // Children end
