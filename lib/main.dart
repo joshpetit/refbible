@@ -24,18 +24,18 @@ class RefBible extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'welcome to Flutter',
-      home: PassageInput(),
+      home: MainSection(),
       darkTheme: ThemeData.dark(),
     );
   }
 }
 
-class PassageInput extends StatefulWidget {
+class MainSection extends StatefulWidget {
   @override
-  _PassageInputState createState() => _PassageInputState();
+  _MainSectionState createState() => _MainSectionState();
 }
 
-class _PassageInputState extends State<PassageInput> {
+class _MainSectionState extends State<MainSection> {
   final controller = TextEditingController();
   final verses = <RefVerse>[];
   final favorites = <RefVerse>[];
