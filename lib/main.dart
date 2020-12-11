@@ -181,6 +181,7 @@ class _MainSectionState extends State<MainSection> {
                         color: Colors.grey,
                         onPressed: () {
                           _getVerse(controller.text);
+                          controller.clear();
                         }),
                     TypeAheadField(
                         direction: AxisDirection.up,
