@@ -43,6 +43,10 @@ class _MainSectionState extends State<MainSection> {
   final favoriteRefs = <String>{};
   Future<Database> database;
 
+  void clearText() {
+    controller.clear();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -179,19 +183,31 @@ class _MainSectionState extends State<MainSection> {
                           _getVerse(controller.text);
                         }),
                     TypeAheadField(
-                      direction: AxisDirection.up,
-                      suggestionsCallback: (pattern) async {
-                        return await identifyReference(pattern);
-                      },
-                      itemBuilder: (context, suggestion) {
-                        print(suggestion);
-                        return ListTile(
-                          title: Text(suggestion.reference.reference),
-                          subtitle: Text(suggestion.preview),
-                        );
-                      },
-                      onSuggestionSelected: (suggestion) {},
-                    )
+                        direction: AxisDirection.up,
+                        textFieldConfiguration: TextFieldConfiguration(
+                            controller: controller,
+                            onSubmitted: (val) {
+                              _getVerse(val);
+                              controller.clear();
+                            }),
+                        suggestionsCallback: (pattern) async {
+                          if (pattern.length > 3) {
+                            return await identifyReference(pattern);
+                          }
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            title: Text(suggestion.reference.reference),
+                            subtitle: Text(suggestion.preview),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) {
+                          _getVerse(suggestion.reference.reference);
+                          controller.clear();
+                        },
+                        noItemsFoundBuilder: (context) {
+                          return Text('Searching...');
+                        })
                   ],
                 ),
               ], // Children end
