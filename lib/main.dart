@@ -6,8 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
 import 'RefVerse.dart';
 import 'package:path/path.dart';
+import 'package:reference_parser/identification.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:focused_menu/modals.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:async';
 
 extension StringExtension on String {
@@ -177,15 +178,20 @@ class _MainSectionState extends State<MainSection> {
                         onPressed: () {
                           _getVerse(controller.text);
                         }),
-                    TextField(
-                      controller: controller,
-                      decoration: InputDecoration(
-                        hintText: 'John 3:16',
-                      ),
-                      onSubmitted: (val) {
-                        _getVerse(val);
+                    TypeAheadField(
+                      direction: AxisDirection.up,
+                      suggestionsCallback: (pattern) async {
+                        return await identifyReference(pattern);
                       },
-                    ),
+                      itemBuilder: (context, suggestion) {
+                        print(suggestion);
+                        return ListTile(
+                          title: Text(suggestion.reference.reference),
+                          subtitle: Text(suggestion.preview),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {},
+                    )
                   ],
                 ),
               ], // Children end
