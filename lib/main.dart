@@ -10,6 +10,7 @@ import 'package:reference_parser/identification.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:async';
+import 'FavoritePage.dart';
 
 extension StringExtension on String {
   String truncateTo(int maxLenght) =>
@@ -25,7 +26,7 @@ class RefBible extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'welcome to Flutter',
-      home: MainSection(),
+      home: FavoritesSection(),
       darkTheme: ThemeData.dark(),
     );
   }
@@ -162,12 +163,16 @@ class _MainSectionState extends State<MainSection> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(Icons.arrow_forward),
+                ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
+                  height: MediaQuery.of(context).size.height * 0.10,
                   child: _buildFavorites(),
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.60,
+                  height: MediaQuery.of(context).size.height * 0.59,
                   child: _buildList(),
                 ),
                 Column(
