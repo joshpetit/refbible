@@ -43,10 +43,6 @@ class _MainSectionState extends State<MainSection> {
   final favoriteRefs = <String>{};
   Future<Database> database;
 
-  void clearText() {
-    controller.clear();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -75,24 +71,6 @@ class _MainSectionState extends State<MainSection> {
     this.setState(() {
       favoriteRefs.addAll(refs);
     });
-  }
-
-  Future<void> insertFavorite(RefVerse verse) async {
-    final Database db = await database;
-
-    await db.insert(
-      'favorite_verses',
-      verse.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<void> removeFavorite(RefVerse verse) async {
-    final Database db = await database;
-    await db.delete(
-      'favorite_verses',
-      where: "reference = '${verse.reference}'",
-    );
   }
 
   @override
@@ -137,6 +115,16 @@ class _MainSectionState extends State<MainSection> {
     });
   }
 
+  Future<void> insertFavorite(RefVerse verse) async {
+    final Database db = await database;
+
+    await db.insert(
+      'favorite_verses',
+      verse.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   void _removeFavorite(RefVerse verse) {
     verse.favorited = false;
     this.setState(() {
@@ -144,6 +132,14 @@ class _MainSectionState extends State<MainSection> {
       favoriteRefs.remove(verse.reference);
     });
     removeFavorite(verse);
+  }
+
+  Future<void> removeFavorite(RefVerse verse) async {
+    final Database db = await database;
+    await db.delete(
+      'favorite_verses',
+      where: "reference = '${verse.reference}'",
+    );
   }
 
   void copyVerse(RefVerse v) {
