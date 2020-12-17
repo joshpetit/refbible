@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'RefVerse.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
+
+extension StringExtension on String {
+  String truncateTo(int maxLenght) =>
+      (this.length <= maxLenght) ? this : '${this.substring(0, maxLenght)}...';
+}
 
 class FavoritesSection extends StatefulWidget {
   @override
@@ -13,7 +19,6 @@ class FavoritesSection extends StatefulWidget {
 
 class _FavoritesSectionState extends State<FavoritesSection> {
   final controller = TextEditingController();
-  final filtered = <RefVerse>[];
   final favorites = <RefVerse>[];
   Future<Database> database;
 
@@ -41,7 +46,6 @@ class _FavoritesSectionState extends State<FavoritesSection> {
       favorites.addAll(List.generate(verses.length, (i) {
         return RefVerse(verses[i]['reference'], verses[i]['text'], true);
       }));
-      filtered.addAll(favorites);
     });
   }
 
@@ -75,13 +79,6 @@ class _FavoritesSectionState extends State<FavoritesSection> {
     );
   }
 
-  void filterList(String val) {
-    setState(() {
-      filtered.retainWhere(
-          (v) => v.toString().toLowerCase().contains(val.toLowerCase()));
-    });
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -101,12 +98,35 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                       child: _buildFavorites()),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.10,
-                    child: TextField(
-                      controller: controller,
-                      onChanged: (String val) {
-                        filterList(val);
-                      },
-                    ),
+                    child: TypeAheadField(
+                        direction: AxisDirection.up,
+                        textFieldConfiguration: TextFieldConfiguration(
+                            controller: controller,
+                            onSubmitted: (val) {
+                              controller.clear();
+                            }),
+                        suggestionsCallback: (pattern) {
+                          return this
+                              .favorites
+                              .where((x) => x
+                                  .toString()
+                                  .toLowerCase()
+                                  .contains(pattern.toLowerCase()))
+                              .toList();
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            subtitle: Text(suggestion.reference),
+                            title: Text(suggestion.text),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) {
+                          controller.clear();
+                        },
+                        animationDuration: Duration(seconds: 0),
+                        noItemsFoundBuilder: (context) {
+                          return Text('Searching...');
+                        }),
                   ),
                 ]),
           ),
