@@ -26,7 +26,7 @@ class RefBible extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'welcome to Flutter',
-      home: FavoritesSection(),
+      home: MainSection(),
       darkTheme: ThemeData.dark(),
     );
   }
@@ -39,6 +39,7 @@ class MainSection extends StatefulWidget {
 
 class _MainSectionState extends State<MainSection> {
   final controller = TextEditingController();
+  ScrollController _scrollController = new ScrollController();
   final verses = <RefVerse>[];
   final favorites = <RefVerse>[];
   final favoriteRefs = <String>{};
@@ -165,7 +166,16 @@ class _MainSectionState extends State<MainSection> {
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: Icon(Icons.arrow_forward),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FavoritesSection()),
+                      );
+                    },
+                  ),
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.10,
@@ -196,6 +206,7 @@ class _MainSectionState extends State<MainSection> {
                             }),
                         suggestionsCallback: (pattern) async {
                           if (pattern.length > 2) {
+                            print(pattern);
                             return await identifyReference(pattern);
                           }
                         },
@@ -243,6 +254,11 @@ class _MainSectionState extends State<MainSection> {
                           onPressed: () {
                             if (!verses[i].favorited) {
                               _addToFavorites(verses[i]);
+                              _scrollController.animateTo(
+                                0.0,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300),
+                              );
                             } else {
                               _removeFavorite(verses[i]);
                             }
@@ -257,6 +273,7 @@ class _MainSectionState extends State<MainSection> {
 
   Widget _buildFavorites() {
     return ListView.builder(
+        controller: _scrollController,
         itemCount: favorites.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
