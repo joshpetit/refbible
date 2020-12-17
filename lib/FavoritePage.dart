@@ -37,17 +37,17 @@ class _FavoritesSectionState extends State<FavoritesSection> {
     );
     final Database db = await database;
     final List<Map<String, dynamic>> verses = await db.query('favorite_verses');
-    favorites.addAll(List.generate(verses.length, (i) {
-      return RefVerse(verses[i]['reference'], verses[i]['text'], true);
-    }));
-    filtered.addAll(favorites);
+    this.setState(() {
+      favorites.addAll(List.generate(verses.length, (i) {
+        return RefVerse(verses[i]['reference'], verses[i]['text'], true);
+      }));
+      filtered.addAll(favorites);
+    });
   }
 
   void _removeFavorite(RefVerse verse) {
     verse.favorited = false;
-    this.setState(() {
-      favorites.removeWhere((ref) => ref.reference == verse.reference);
-    });
+    this.setState(() {});
     removeFavorite(verse);
   }
 
@@ -56,6 +56,22 @@ class _FavoritesSectionState extends State<FavoritesSection> {
     await db.delete(
       'favorite_verses',
       where: "reference = '${verse.reference}'",
+    );
+  }
+
+  void _addToFavorites(RefVerse verse) {
+    verse.favorited = true;
+    setState(() {});
+    insertFavorite(verse);
+  }
+
+  Future<void> insertFavorite(RefVerse verse) async {
+    final Database db = await database;
+
+    await db.insert(
+      'favorite_verses',
+      verse.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
@@ -115,7 +131,11 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                       ? Icons.favorite
                       : Icons.favorite_border),
                   onPressed: () {
-                    _removeFavorite(favorites[i]);
+                    if (favorites[i].favorited) {
+                      _removeFavorite(favorites[i]);
+                    } else {
+                      _addToFavorites(favorites[i]);
+                    }
                   }),
             ),
           );
