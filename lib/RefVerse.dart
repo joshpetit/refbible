@@ -7,4 +7,8 @@ class RefVerse {
 
   Map<String, dynamic> toMap() =>
       {'reference': reference, 'text': text, 'favorited': favorited ? 1 : 0};
+  @override
+  String toString() {
+    return "${reference}\n${text}";
+  }
 }
