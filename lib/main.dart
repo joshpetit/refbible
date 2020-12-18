@@ -12,11 +12,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:async';
 import 'FavoritePage.dart';
 
-extension StringExtension on String {
-  String truncateTo(int maxLenght) =>
-      (this.length <= maxLenght) ? this : '${this.substring(0, maxLenght)}...';
-}
-
 void main() => runApp(
       RefBible(),
     );
@@ -164,22 +159,28 @@ class _MainSectionState extends State<MainSection> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FavoritesSection()),
-                      );
-                    },
-                  ),
-                ),
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.10,
-                  child: _buildFavorites(),
+                  height: MediaQuery.of(context).size.height * 0.12,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildFavorites(),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_forward),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FavoritesSection()),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.59,
@@ -206,7 +207,6 @@ class _MainSectionState extends State<MainSection> {
                             }),
                         suggestionsCallback: (pattern) async {
                           if (pattern.length > 2) {
-                            print(pattern);
                             return await identifyReference(pattern);
                           }
                         },
