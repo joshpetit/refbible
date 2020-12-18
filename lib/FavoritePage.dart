@@ -87,14 +87,17 @@ class _FavoritesSectionState extends State<FavoritesSection> {
       body: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+          ),
           child: SingleChildScrollView(
             child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                      height: MediaQuery.of(context).size.height * 0.70,
+                      height: MediaQuery.of(context).size.height * 0.73,
                       child: _buildFavorites()),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.10,
@@ -102,6 +105,9 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                         direction: AxisDirection.up,
                         textFieldConfiguration: TextFieldConfiguration(
                             controller: controller,
+                            decoration: InputDecoration(
+                              hintText: "Filter Favorites",
+                            ),
                             onSubmitted: (val) {
                               controller.clear();
                             }),

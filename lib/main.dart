@@ -201,6 +201,9 @@ class _MainSectionState extends State<MainSection> {
                         direction: AxisDirection.up,
                         textFieldConfiguration: TextFieldConfiguration(
                             controller: controller,
+                            decoration: InputDecoration(
+                              hintText: "Search Passage",
+                            ),
                             onSubmitted: (val) {
                               _getVerse(val);
                               controller.clear();
@@ -225,14 +228,14 @@ class _MainSectionState extends State<MainSection> {
                           return Text('Searching...');
                         }),
                   ],
-                ),
+                ), // Column end
               ], // Children end
             ), // Column end
-          ),
+          ), // SCSV end
         ), // Padding end
-      ),
-    );
-  } // end
+      ), // Align end
+    ); // Scaffold end
+  } // end end :D
 
   Widget _buildList() {
     return ListView.builder(
