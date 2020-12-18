@@ -69,6 +69,11 @@ class _FavoritesSectionState extends State<FavoritesSection> {
     insertFavorite(verse);
   }
 
+  void copyVerse(RefVerse v) {
+    FlutterClipboard.copy("${v.reference}\n${v.text}");
+    Fluttertoast.showToast(msg: 'Copied to Clipboard');
+  }
+
   Future<void> insertFavorite(RefVerse verse) async {
     final Database db = await database;
 
@@ -128,6 +133,7 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                         },
                         onSuggestionSelected: (suggestion) {
                           controller.clear();
+                          copyVerse(suggestion);
                         },
                         animationDuration: Duration(seconds: 0),
                         noItemsFoundBuilder: (context) {
@@ -163,6 +169,9 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                       _addToFavorites(favorites[i]);
                     }
                   }),
+              onTap: () {
+                copyVerse(favorites[i]);
+              },
             ),
           );
         });
