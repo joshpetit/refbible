@@ -1,16 +1,16 @@
 # refbible
 
-A new Flutter project.
+Reference Bible is a simple bible app. Query, favorite, and find bible passages easily.
 
-## Getting Started
+Demo:
+https://www.youtube.com/embed/K9By2rVrnww
 
-This project is a starting point for a Flutter application.
+## About
+I wanted a way to quickly copy bible verses so I made one :). Still in development, but the main goal really is to just be simple, robust, and
+easily shareable.
 
-A few resources to get you started if this is your first Flutter project:
+As of this writing the app can save favorites, query verses based on the contents of the search, and copy verses on query or on tap. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+One feature I anticipate adding soon is a tile icon for Android so that a console can be pulled up to query a verse or copy a favorite quickly.
+I wish this could be implemented on iOS but I'm not sure that's possible yet. For ease of use I am looking into creating a combobox like input
+ability also.
