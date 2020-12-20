@@ -3,7 +3,7 @@
 Reference Bible is a simple bible app. Query, favorite, and find bible passages easily.
 
 Demo:
-[![Watch the RefBible demo](assets/refbible.png)](https://youtu.be/K9By2rVrnww)
+[![Watch the RefBible demo](assests/refbible.png)](https://youtu.be/K9By2rVrnww)
 
 ## About
 I wanted a way to quickly copy bible verses so I made one :). Still in development, but the main goal really is to just be simple, robust, and
