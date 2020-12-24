@@ -36,6 +36,7 @@ class _FavoritesSectionState extends State<FavoritesSection> {
             """CREATE TABLE IF NOT EXISTS favorite_verses(id INTEGER PRIMARY KEY AUTOINCREMENT,
             reference TEXT UNIQUE,
             text TEXT,
+            version TEXT,
             favorited INTEGER)""");
       },
       version: 1,
