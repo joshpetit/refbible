@@ -10,6 +10,7 @@ import 'package:reference_parser/identification.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'FavoritePage.dart';
 
 void main() => runApp(
@@ -43,7 +44,12 @@ class _MainSectionState extends State<MainSection> {
   @override
   void initState() {
     super.initState();
+    _loadPrefs();
     initDB();
+  }
+
+  _loadPrefs() async {
+    var prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> initDB() async {
@@ -54,6 +60,7 @@ class _MainSectionState extends State<MainSection> {
             """CREATE TABLE IF NOT EXISTS favorite_verses(id INTEGER PRIMARY KEY AUTOINCREMENT,
             reference TEXT UNIQUE,
             text TEXT,
+            version TEXT,
             favorited INTEGER)""");
       },
       version: 1,
@@ -63,7 +70,8 @@ class _MainSectionState extends State<MainSection> {
     List<String> refs = [];
     favorites.addAll(List.generate(verses.length, (i) {
       refs.add(verses[i]['reference']);
-      return RefVerse(verses[i]['reference'], verses[i]['text'], true);
+      return RefVerse(verses[i]['reference'], verses[i]['text'],
+          verses[i]['version'], true);
     }));
     this.setState(() {
       favoriteRefs.addAll(refs);
@@ -79,8 +87,8 @@ class _MainSectionState extends State<MainSection> {
   void _getVerse(String verse) {
     _fetchEsvAPI(verse)
         .then((x) => {
-              _addVerse(RefVerse(
-                  x.reference, x.passage, favoriteRefs.contains(x.reference)))
+              _addVerse(RefVerse(x.reference, x.passage, 'esv',
+                  favoriteRefs.contains(x.reference)))
             })
         .catchError((e) => 'welp ¯\_(ツ)_/¯ ');
   }
@@ -247,7 +255,8 @@ class _MainSectionState extends State<MainSection> {
           return GestureDetector(
               child: ListTile(
                   title: Text(verses[i].text),
-                  subtitle: Text(verses[i].reference),
+                  subtitle: Text(
+                      "${verses[i].reference} (${verses[i].version.toUpperCase()})"),
                   trailing: Column(
                     children: [
                       IconButton(

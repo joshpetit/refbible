@@ -44,7 +44,8 @@ class _FavoritesSectionState extends State<FavoritesSection> {
     final List<Map<String, dynamic>> verses = await db.query('favorite_verses');
     this.setState(() {
       favorites.addAll(List.generate(verses.length, (i) {
-        return RefVerse(verses[i]['reference'], verses[i]['text'], true);
+        return RefVerse(verses[i]['reference'], verses[i]['text'],
+            verses[i]['version'], true);
       }));
     });
   }
@@ -157,7 +158,8 @@ class _FavoritesSectionState extends State<FavoritesSection> {
           return GestureDetector(
             child: ListTile(
               title: Text(favorites[i].text),
-              subtitle: Text(favorites[i].reference),
+              subtitle: Text(
+                  "${favorites[i].reference} (${favorites[i].version.toUpperCase()})"),
               trailing: IconButton(
                   icon: Icon(favorites[i].favorited
                       ? Icons.favorite
