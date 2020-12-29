@@ -13,6 +13,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'FavoritePage.dart';
 import 'Settings.dart';
+import 'VerseView.dart';
 
 void main() => runApp(
       RefBible(),
@@ -119,7 +120,7 @@ class _MainSectionState extends State<MainSection> {
     Fluttertoast.showToast(msg: 'Copied to Clipboard');
   }
 
-  void _addToFavorites(RefVerse verse) {
+  void addFavorite(RefVerse verse) {
     setState(() {
       favorites.insert(0, verse);
     });
@@ -221,7 +222,15 @@ class _MainSectionState extends State<MainSection> {
                 ),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.59,
-                  child: _buildList(),
+                  child: VerseView(verses, copyVerse, (RefVerse v) {
+                    addFavorite(v);
+
+                    _scrollController.animateTo(
+                      0.0,
+                      curve: Curves.easeOut,
+                      duration: const Duration(milliseconds: 300),
+                    );
+                  }, _removeFavorite),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -273,44 +282,6 @@ class _MainSectionState extends State<MainSection> {
       ), // Align end
     ); // Scaffold end
   } // end end :D
-
-  Widget _buildList() {
-    return ListView.builder(
-        itemCount: verses.length,
-        reverse: true,
-        shrinkWrap: true,
-        physics: AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, i) {
-          return GestureDetector(
-              child: ListTile(
-                  title: Text(verses[i].text),
-                  subtitle: Text(
-                      "${verses[i].reference} (${verses[i].version.toUpperCase()})"),
-                  trailing: Column(
-                    children: [
-                      IconButton(
-                          icon: Icon(verses[i].favorited
-                              ? Icons.favorite
-                              : Icons.favorite_border),
-                          onPressed: () {
-                            if (!verses[i].favorited) {
-                              _addToFavorites(verses[i]);
-                              _scrollController.animateTo(
-                                0.0,
-                                curve: Curves.easeOut,
-                                duration: const Duration(milliseconds: 300),
-                              );
-                            } else {
-                              _removeFavorite(verses[i]);
-                            }
-                          }),
-                    ],
-                  ),
-                  onTap: () {
-                    copyVerse(verses[i]);
-                  }));
-        });
-  }
 
   Widget _buildFavorites() {
     return ListView.builder(
