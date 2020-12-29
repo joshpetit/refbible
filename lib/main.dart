@@ -12,6 +12,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'FavoritePage.dart';
+import 'Settings.dart';
 
 void main() => runApp(
       RefBible(),
@@ -39,6 +40,7 @@ class _MainSectionState extends State<MainSection> {
   final verses = <RefVerse>[];
   final favorites = <RefVerse>[];
   final favoriteRefs = <String>{};
+  final settings = <String, dynamic>{};
   Future<Database> database;
 
   @override
@@ -50,6 +52,14 @@ class _MainSectionState extends State<MainSection> {
 
   _loadPrefs() async {
     var prefs = await SharedPreferences.getInstance();
+    String version = prefs.getString('version');
+    if (version == null) {
+      prefs.setString('version', 'esv');
+      version = 'esv';
+    }
+    setState(() {
+      settings['version'] = version;
+    });
   }
 
   Future<void> initDB() async {
@@ -157,6 +167,25 @@ class _MainSectionState extends State<MainSection> {
     return Scaffold(
       appBar: AppBar(
         title: Text('RefBible'),
+        actions: [
+          PopupMenuButton<String>(onSelected: (String value) {
+            switch (value) {
+              case 'Settings':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Settings()),
+                );
+                break;
+            }
+          }, itemBuilder: (BuildContext context) {
+            return {'Settings'}.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          }),
+        ],
       ),
       body: Align(
         alignment: Alignment.bottomCenter,
