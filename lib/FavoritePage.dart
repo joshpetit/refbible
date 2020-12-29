@@ -6,6 +6,7 @@ import 'RefVerse.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
+import 'VerseView.dart';
 
 extension StringExtension on String {
   String truncateTo(int maxLenght) =>
@@ -13,77 +14,29 @@ extension StringExtension on String {
 }
 
 class FavoritesSection extends StatefulWidget {
+  final List<RefVerse> verses;
+  final Function(RefVerse) copyVerse;
+  final Function(RefVerse) addFavorite;
+  final Function(RefVerse) removeFavorite;
+
+  FavoritesSection(
+      this.verses, this.copyVerse, this.addFavorite, this.removeFavorite);
+
   @override
   _FavoritesSectionState createState() => _FavoritesSectionState();
 }
 
 class _FavoritesSectionState extends State<FavoritesSection> {
   final controller = TextEditingController();
-  final favorites = <RefVerse>[];
+  var favorites = <RefVerse>[];
   Future<Database> database;
+
+  FavoritesSection get widget => super.widget;
 
   @override
   void initState() {
     super.initState();
-    initDB();
-  }
-
-  Future<void> initDB() async {
-    database = openDatabase(
-      join(await getDatabasesPath(), 'refbible.db'),
-      onCreate: (db, version) {
-        return db.execute(
-            """CREATE TABLE IF NOT EXISTS favorite_verses(id INTEGER PRIMARY KEY AUTOINCREMENT,
-            reference TEXT UNIQUE,
-            text TEXT,
-            version TEXT,
-            favorited INTEGER)""");
-      },
-      version: 1,
-    );
-    final Database db = await database;
-    final List<Map<String, dynamic>> verses = await db.query('favorite_verses');
-    this.setState(() {
-      favorites.addAll(List.generate(verses.length, (i) {
-        return RefVerse(verses[i]['reference'], verses[i]['text'],
-            verses[i]['version'], true);
-      }));
-    });
-  }
-
-  void _removeFavorite(RefVerse verse) {
-    verse.favorited = false;
-    this.setState(() {});
-    removeFavorite(verse);
-  }
-
-  Future<void> removeFavorite(RefVerse verse) async {
-    final Database db = await database;
-    await db.delete(
-      'favorite_verses',
-      where: "reference = '${verse.reference}'",
-    );
-  }
-
-  void _addToFavorites(RefVerse verse) {
-    verse.favorited = true;
-    setState(() {});
-    insertFavorite(verse);
-  }
-
-  void copyVerse(RefVerse v) {
-    FlutterClipboard.copy("${v.reference}\n${v.text}");
-    Fluttertoast.showToast(msg: 'Copied to Clipboard');
-  }
-
-  Future<void> insertFavorite(RefVerse verse) async {
-    final Database db = await database;
-
-    await db.insert(
-      'favorite_verses',
-      verse.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    favorites = widget.verses;
   }
 
   Widget build(BuildContext context) {
@@ -104,8 +57,10 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                      height: MediaQuery.of(context).size.height * 0.73,
-                      child: _buildFavorites()),
+                    height: MediaQuery.of(context).size.height * 0.73,
+                    child: VerseView(favorites, widget.copyVerse,
+                        widget.addFavorite, widget.removeFavorite),
+                  ),
                   Container(
                     height: MediaQuery.of(context).size.height * 0.10,
                     child: TypeAheadField(
@@ -120,7 +75,8 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                             }),
                         suggestionsCallback: (pattern) {
                           return this
-                              .favorites
+                              .widget
+                              .verses
                               .where((x) => x
                                   .toString()
                                   .toLowerCase()
@@ -135,7 +91,7 @@ class _FavoritesSectionState extends State<FavoritesSection> {
                         },
                         onSuggestionSelected: (suggestion) {
                           controller.clear();
-                          copyVerse(suggestion);
+                          widget.copyVerse(suggestion);
                         },
                         animationDuration: Duration(seconds: 0),
                         noItemsFoundBuilder: (context) {
@@ -147,36 +103,5 @@ class _FavoritesSectionState extends State<FavoritesSection> {
         ),
       ),
     );
-  }
-
-  Widget _buildFavorites() {
-    return ListView.builder(
-        itemCount: favorites.length,
-        reverse: true,
-        shrinkWrap: true,
-        physics: AlwaysScrollableScrollPhysics(),
-        itemBuilder: (context, i) {
-          return GestureDetector(
-            child: ListTile(
-              title: Text(favorites[i].text),
-              subtitle: Text(
-                  "${favorites[i].reference} (${favorites[i].version.toUpperCase()})"),
-              trailing: IconButton(
-                  icon: Icon(favorites[i].favorited
-                      ? Icons.favorite
-                      : Icons.favorite_border),
-                  onPressed: () {
-                    if (favorites[i].favorited) {
-                      _removeFavorite(favorites[i]);
-                    } else {
-                      _addToFavorites(favorites[i]);
-                    }
-                  }),
-              onTap: () {
-                copyVerse(favorites[i]);
-              },
-            ),
-          );
-        });
   }
 }

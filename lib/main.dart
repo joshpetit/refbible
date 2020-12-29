@@ -212,7 +212,11 @@ class _MainSectionState extends State<MainSection> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FavoritesSection()),
+                                  builder: (context) => FavoritesSection(
+                                      favorites,
+                                      copyVerse,
+                                      addFavorite,
+                                      _removeFavorite)),
                             );
                           },
                         ),

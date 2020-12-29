@@ -39,6 +39,7 @@ class _VerseViewState extends State<VerseView> {
                               widget.addFavorite(widget.verses[i]);
                             } else {
                               widget.removeFavorite(widget.verses[i]);
+                              setState(() {});
                             }
                           }),
                     ],
