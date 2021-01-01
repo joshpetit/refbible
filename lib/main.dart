@@ -42,6 +42,7 @@ class _MainSectionState extends State<MainSection> {
   final favorites = <RefVerse>[];
   final favoriteRefs = <String>{};
   final settings = <String, dynamic>{};
+  SharedPreferences prefs;
   Future<Database> database;
 
   @override
@@ -52,14 +53,21 @@ class _MainSectionState extends State<MainSection> {
   }
 
   _loadPrefs() async {
-    var prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     String version = prefs.getString('version');
     if (version == null) {
       prefs.setString('version', 'esv');
       version = 'esv';
     }
+
     setState(() {
       settings['version'] = version;
+    });
+  }
+
+  _setSetting(String setting, dynamic value) {
+    setState(() {
+      settings[setting] = value;
     });
   }
 
@@ -106,7 +114,7 @@ class _MainSectionState extends State<MainSection> {
 
   Future<dynamic> _fetchAPI(String verse) async {
     var res = await Bible.queryPassage(verse,
-        providerName: 'bibleorg', version: 'asv');
+        version: settings['version'].toLowerCase());
     return res;
   }
 
@@ -174,7 +182,8 @@ class _MainSectionState extends State<MainSection> {
               case 'Settings':
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Settings()),
+                  MaterialPageRoute(
+                      builder: (context) => Settings(_setSetting, settings)),
                 );
                 break;
             }
