@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
-import 'package:bible/bible.dart';
+import 'package:bible/bible.dart' as Bible;
 import 'package:menu/menu.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Secrets.dart';
@@ -96,17 +96,17 @@ class _MainSectionState extends State<MainSection> {
   }
 
   void _getVerse(String verse) {
-    _fetchEsvAPI(verse)
+    _fetchAPI(verse)
         .then((x) => {
-              _addVerse(RefVerse(x.reference, x.passage, 'esv',
+              _addVerse(RefVerse(x.reference, x.passage, x.version,
                   favoriteRefs.contains(x.reference)))
             })
         .catchError((e) => 'welp ¯\_(ツ)_/¯ ');
   }
 
-  Future<dynamic> _fetchEsvAPI(String verse) async {
-    Bible.addKeys({"esvapi": Secrets.ESV});
-    var res = await Bible.queryPassage(verse);
+  Future<dynamic> _fetchAPI(String verse) async {
+    var res = await Bible.queryPassage(verse,
+        providerName: 'bibleorg', version: 'asv');
     return res;
   }
 
