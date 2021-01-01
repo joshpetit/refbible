@@ -28,7 +28,7 @@ class FavoritesSection extends StatefulWidget {
 
 class _FavoritesSectionState extends State<FavoritesSection> {
   final controller = TextEditingController();
-  var favorites = <RefVerse>[];
+  final favorites = <RefVerse>[];
   Future<Database> database;
 
   FavoritesSection get widget => super.widget;
@@ -36,7 +36,7 @@ class _FavoritesSectionState extends State<FavoritesSection> {
   @override
   void initState() {
     super.initState();
-    favorites = widget.verses;
+    favorites.addAll(widget.verses);
   }
 
   Widget build(BuildContext context) {
